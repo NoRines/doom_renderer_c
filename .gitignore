@@ -1,0 +1,4 @@
+wads/
+.vscode/
+SDL2-2.26.4/
+*.exe
