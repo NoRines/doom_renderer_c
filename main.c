@@ -32,7 +32,12 @@ void run() {
 
     do {
         bool previous_escape = input_key(SDL_SCANCODE_ESCAPE);
+        bool zero = input_key(SDL_SCANCODE_0);
         input_process();
+
+        if (input_key(SDL_SCANCODE_0) && !zero) {
+            int a = 0;
+        }
 
         if (input_key(SDL_SCANCODE_ESCAPE) && !previous_escape) {
             in_3d = !in_3d;
@@ -77,7 +82,7 @@ int init_game() {
     int error = wad_load("wads\\DOOM.WAD");
 
     if (!error) {
-        error = map_create("E1M1");
+        error = map_create("E1M3");
     }
 
     wad_unload();

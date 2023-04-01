@@ -330,12 +330,18 @@ static void store_current_seg(int32_t x1, int32_t x2) {
         should_draw_upper_section = false;
 
         if (rel_ceiling2 < rel_ceiling1) { // We can see the upper section
+            if (rel_ceiling2 < rel_floor1) { // (UPPER_OVERFLOW) Fixes if upper overflows down past the floor.
+                rel_ceiling2 = rel_floor1;
+            }
             should_draw_upper_section = true;
             upper1 = half_size_y - (scale1 * rel_ceiling2);
             upper2 = half_size_y - (scale2 * rel_ceiling2);
             upper_step = (upper1 - upper2) / (double)(x1 - x2);
         }
         if (rel_floor2 > rel_floor1) { // We can see the lower section
+            //if (rel_floor1 > rel_ceiling2) { // Not sure if this fixes the opposite to (UPPER_OVERFLOW).
+            //    rel_floor1 = rel_ceiling2;
+            //}
             should_draw_lower_section = true;
             lower1 = half_size_y - (scale1 * rel_floor2);
             lower2 = half_size_y - (scale2 * rel_floor2);
