@@ -441,11 +441,11 @@ int wad_read_palettes(palette_t **pp_palettes, uint32_t *n_palettes) {
         return -1;
     }
 
-    *n_palettes = 14;
+    *n_palettes = N_PALETTES;
     *pp_palettes = malloc(*n_palettes * sizeof **pp_palettes);
 
     for (uint32_t i = 0; i < *n_palettes; i++) {
-        (*pp_palettes)[i] = read_palette(wad_buffer, lump->filepos + i * N_PALETTE_COLORS * WAD_COLOR_T_SIZE);
+        (*pp_palettes)[i] = read_palette(wad_buffer, lump->filepos + i * WAD_PALETTE_T_SIZE);
     }
 
     return 0;

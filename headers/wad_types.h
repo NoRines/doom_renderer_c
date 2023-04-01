@@ -134,5 +134,7 @@ typedef struct {
 typedef struct {
     color_t colors[N_PALETTE_COLORS];
 } palette_t;
+#define WAD_PALETTE_T_SIZE WAD_COLOR_T_SIZE * N_PALETTE_COLORS
 
+#define N_PALETTES 14
 
