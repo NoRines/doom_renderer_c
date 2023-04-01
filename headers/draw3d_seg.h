@@ -1,7 +1,7 @@
 #pragma once
 
 #include "player.h"
-#include "map_types.h"
+#include "wad_types.h"
 
 void draw3d_seg_quit();
 void draw3d_seg_init();

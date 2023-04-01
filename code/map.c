@@ -122,7 +122,7 @@ void map_destroy() {
 int map_create(const char *map_name) {
     map_destroy();
 
-    int map_lump_index = wad_map_lump_index(map_name);
+    int map_lump_index = wad_lump_index_by_name(map_name);
     if (map_lump_index < 0) {
         printf("ERROR: Invalid map name provided: %s\n", map_name);
         return -1;

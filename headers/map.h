@@ -1,6 +1,6 @@
 #pragma once
 
-#include "map_types.h"
+#include "wad_types.h"
 
 void map_destroy();
 int map_create(const char *map_name);

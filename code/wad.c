@@ -117,7 +117,7 @@ int wad_load(const char *name) {
 }
 
 
-int wad_map_lump_index(const char *name) {
+int wad_lump_index_by_name(const char *name) {
     for (uint32_t i = 0; i < wadinfo.numlumps; i++) {
         if (strcmp(lumps[i].name, name) == 0) {
             return i;
@@ -408,3 +408,45 @@ int wad_read_sectors(uint32_t map_lump_index, sector_t **pp_sectors, uint32_t *n
     return 0;
 }
 
+
+static color_t read_color(char *buffer, uint32_t offset) {
+    color_t color = {0};
+    color.r = (uint8_t)buffer[offset++];
+    color.g = (uint8_t)buffer[offset++];
+    color.b = (uint8_t)buffer[offset++];
+    color.a = 255;
+    return color;
+}
+
+static palette_t read_palette(char *buffer, uint32_t offset) {
+    palette_t palette = {0};
+    for (uint32_t i = 0; i < N_PALETTE_COLORS; i++) {
+        palette.colors[i] = read_color(buffer, offset + i * WAD_COLOR_T_SIZE);
+    }
+    return palette;
+}
+
+int wad_read_palettes(palette_t **pp_palettes, uint32_t *n_palettes) {
+    if (*pp_palettes) {
+        printf("Error invalid pallete double pointer. (Base pointer should be NULL).\n");
+        return -1;
+    }
+
+    int palletes_lump_index = wad_lump_index_by_name("PLAYPAL");
+
+    filelump_t *lump = &lumps[palletes_lump_index];
+
+    if (strcmp(lump->name, "PLAYPAL")) {
+        printf("Error: loading PLAYPAL");
+        return -1;
+    }
+
+    *n_palettes = 14;
+    *pp_palettes = malloc(*n_palettes * sizeof **pp_palettes);
+
+    for (uint32_t i = 0; i < *n_palettes; i++) {
+        (*pp_palettes)[i] = read_palette(wad_buffer, lump->filepos + i * N_PALETTE_COLORS * WAD_COLOR_T_SIZE);
+    }
+
+    return 0;
+}

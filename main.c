@@ -82,8 +82,24 @@ int init_game() {
     int error = wad_load("wads\\DOOM.WAD");
 
     if (!error) {
-        error = map_create("E1M3");
+        error = map_create("E1M1");
     }
+
+    /* TEST READ PALETTES */
+    palette_t *ppalettes = NULL;
+    uint32_t n_palettes;
+    error = wad_read_palettes(&ppalettes, &n_palettes);
+
+    for (uint32_t i = 0; i < n_palettes; i++) {
+        for (uint32_t j = 0; j < N_PALETTE_COLORS; j++) {
+            color_t color = ppalettes[i].colors[j];
+            printf("(%d, %d, %d, %d)", color.r, color.g, color.b, color.a);
+        }
+        printf("\n");
+    }
+    printf("%d, palettes loaded\n", n_palettes);
+    free(ppalettes);
+    /* END TEST READ PALETTES */
 
     wad_unload();
 

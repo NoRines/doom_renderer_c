@@ -120,3 +120,19 @@ typedef enum {
     eNODES,
     eSECTORS
 } wadtypeoffset_t;
+
+
+typedef struct {
+    uint8_t r;
+    uint8_t g;
+    uint8_t b;
+    uint8_t a;
+} color_t;
+#define WAD_COLOR_T_SIZE 3
+
+#define N_PALETTE_COLORS 256
+typedef struct {
+    color_t colors[N_PALETTE_COLORS];
+} palette_t;
+
+

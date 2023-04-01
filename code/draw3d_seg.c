@@ -464,13 +464,6 @@ static void clip_pass_wall_segment(int32_t first, int32_t last) {
     store_current_seg(next->last + 1, last);
 }
 
-typedef struct {
-    uint8_t r;
-    uint8_t g;
-    uint8_t b;
-    uint8_t a;
-} color_t;
-
 static color_t get_random_color(int seed) {
     srand(seed);
     color_t c;
