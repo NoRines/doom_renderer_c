@@ -60,53 +60,29 @@ void run() {
             player.angle = angle_sub(player.angle, 5.0 * ANG1);
         }
 
-        SDL_SetRenderDrawColor(prenderer, 0, 0, 0, 255);
-        SDL_RenderClear(prenderer);
+        //SDL_SetRenderDrawColor(prenderer, 0, 0, 0, 255);
+        //SDL_RenderClear(prenderer);
 
-        if (!in_3d) {
-            /* Render map and player in 2d */
-            draw2d_automap();
-            draw2d_visible_automap(&player);
-            draw2d_player(&player);
-        } else {
-            draw3d_view(&player);
-        }
+        //if (!in_3d) {
+        //    /* Render map and player in 2d */
+        //    draw2d_automap();
+        //    draw2d_visible_automap(&player);
+        //    draw2d_player(&player);
+        //} else {
+        //    /* Render map in 3d from player view */
+        //    draw3d_view(&player);
+        //}
 
-        SDL_RenderPresent(prenderer);
+        //SDL_RenderPresent(prenderer);
+
+        sdl_help_start_frame();
+
+        sdl_help_draw_vertical_line(100, 100, 200, 200);
+
+        sdl_help_finish_frame();
 
         SDL_Delay(20);
     } while (input_window_open());
-}
-
-int init_game() {
-    int error = wad_load("wads\\DOOM.WAD");
-
-    if (!error) {
-        error = map_create("E1M1");
-    }
-
-    /* TEST READ PALETTES */
-    palette_t *ppalettes = NULL;
-    uint32_t n_palettes;
-    error = wad_read_palettes(&ppalettes, &n_palettes);
-
-    for (uint32_t i = 0; i < n_palettes; i++) {
-        for (uint32_t j = 0; j < N_PALETTE_COLORS; j++) {
-            color_t color = ppalettes[i].colors[j];
-            printf("(%d, %d, %d, %d)", color.r, color.g, color.b, color.a);
-        }
-        printf("\n");
-    }
-    printf("%d, palettes loaded\n", n_palettes);
-    free(ppalettes);
-    /* END TEST READ PALETTES */
-
-    wad_unload();
-
-    draw2d_init();
-    draw3d_init();
-
-    return error;
 }
 
 void free_all_resources() {
@@ -117,19 +93,28 @@ void free_all_resources() {
     draw3d_quit();
 }
 
-int main(int argc, char *argv[]) {
+int init_game() {
+
+    int error = wad_load("wads\\DOOM.WAD");
+
+    if (!error) error = map_create("E1M1");
+
+    if (!error) error = sdl_help_init(WIDTH, HEIGHT, "my game engine");
     atexit(sdl_help_quit);
+
+    wad_unload();
+
+    draw2d_init();
+    draw3d_init();
     atexit(free_all_resources);
-    int error = sdl_help_init(WIDTH * WINDOW_SCALE, HEIGHT * WINDOW_SCALE, "my game engine");
-    SDL_RenderSetLogicalSize(sdl_help_renderer(), WIDTH, HEIGHT);
 
-    if (!error) {
-        error = init_game();
-    }
+    return error;
+}
 
-    if (!error) {
-        run();
-    }
+int main(int argc, char *argv[]) {
+    int error = init_game();
+
+    if (!error) run();
 
     return error;
 }
