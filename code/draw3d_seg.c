@@ -3,8 +3,6 @@
 #include "sdl_help.h"
 #include <assert.h>
 
-static SDL_Renderer *prenderer = NULL;
-
 static int32_t render_size_x = 0;
 static int32_t render_size_y = 0;
 static double half_size_x = 0.0;
@@ -47,6 +45,8 @@ static sector_t *pleft_sector = NULL;
 
 /* Render context */
 /************************************************************/
+static uint8_t seg_color = 0;
+
 static double ceiling1 = 0;
 static double ceiling2 = 0;
 static double floor1 = 0;
@@ -102,9 +102,8 @@ void draw3d_seg_quit() {
 void draw3d_seg_init() {
     draw3d_seg_quit();
 
-    prenderer = sdl_help_renderer();
-
-    SDL_RenderGetLogicalSize(prenderer, &render_size_x, &render_size_y);
+    render_size_x = sdl_help_screen_buffer_w();
+    render_size_y = sdl_help_screen_buffer_h();
 
     half_size_x = (double)render_size_x / 2.0;
     half_size_y = (double)render_size_y / 2.0;
@@ -152,7 +151,7 @@ static bool clip_column(int32_t x, int32_t *py_start, int32_t *py_end) {
 }
 
 static void middle_section(int32_t x, int32_t y_start, int32_t y_end) {
-    SDL_RenderDrawLine(prenderer, x, y_start, x, y_end);
+    sdl_help_draw_vertical_line(x, y_start, y_end, seg_color);
     clip_upper[x] = render_size_y;
     clip_lower[x] = -1;
 }
@@ -167,7 +166,7 @@ static void upper_section(int32_t x, int32_t y_start, double *upper) {
         }
 
         if (upper_height >= y_start) {
-            SDL_RenderDrawLine(prenderer, x, y_start, x, upper_height);
+            sdl_help_draw_vertical_line(x, y_start, upper_height, seg_color);
             clip_upper[x] = upper_height;
         } else {
             clip_upper[x] = y_start - 1;
@@ -188,7 +187,7 @@ static void lower_section(int32_t x, int32_t y_end, double *lower) {
         }
 
         if (lower_height <= y_end) {
-            SDL_RenderDrawLine(prenderer, x, lower_height, x, y_end);
+            sdl_help_draw_vertical_line(x, lower_height, y_end, seg_color);
             clip_lower[x] = lower_height;
         } else {
             clip_lower[x] = y_end + 1;
@@ -464,13 +463,10 @@ static void clip_pass_wall_segment(int32_t first, int32_t last) {
     store_current_seg(next->last + 1, last);
 }
 
-static color_t get_random_color(int seed) {
+static uint8_t get_random_color(int seed) {
     srand(seed);
-    color_t c;
-    c.r = rand() % 255;
-    c.g = rand() % 255;
-    c.b = rand() % 255;
-    c.a = 255;
+    uint8_t c;
+    c = rand() % 255;
     return c;
 }
 
@@ -520,8 +516,8 @@ void draw3d_seg_plot(seg_t *_pseg, player_t *_pplayer) {
     pleft_sector = pleft_sidedef != NULL ?
         &map_sectors[pleft_sidedef->sector] : NULL;
 
-    color_t c = get_random_color(pseg->linedef_id);
-    SDL_SetRenderDrawColor(prenderer, c.r, c.g, c.b, c.a);
+    uint8_t c = get_random_color(pseg->linedef_id);
+    seg_color = c;
 
     if (seg_is_solid()) {
         clip_solid_wall_segment(x1, x2);

@@ -135,10 +135,17 @@ void sdl_help_finish_frame() {
     SDL_RenderPresent(p_renderer);
 }
 
+int32_t sdl_help_screen_buffer_w() {
+    return p_screen_buffer->w;
+}
+
+int32_t sdl_help_screen_buffer_h() {
+    return p_screen_buffer->h;
+}
 
 void sdl_help_draw_vertical_line(int32_t x, int32_t start, int32_t end, uint8_t color) {
     uint8_t *pixels = (uint8_t*)p_screen_buffer->pixels;
-    for (int32_t y = start; y < end; y++) {
+    for (int32_t y = start; y <= end; y++) {
         pixels[x + y * p_screen_buffer->pitch] = color;
     }
 }

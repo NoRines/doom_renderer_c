@@ -26,9 +26,7 @@ void run() {
 
     double move_speed = 5.0;
 
-    SDL_Renderer *prenderer = sdl_help_renderer();
-
-    bool in_3d = false;
+    bool in_3d = true;
 
     do {
         bool previous_escape = input_key(SDL_SCANCODE_ESCAPE);
@@ -60,24 +58,17 @@ void run() {
             player.angle = angle_sub(player.angle, 5.0 * ANG1);
         }
 
-        //SDL_SetRenderDrawColor(prenderer, 0, 0, 0, 255);
-        //SDL_RenderClear(prenderer);
-
-        //if (!in_3d) {
-        //    /* Render map and player in 2d */
-        //    draw2d_automap();
-        //    draw2d_visible_automap(&player);
-        //    draw2d_player(&player);
-        //} else {
-        //    /* Render map in 3d from player view */
-        //    draw3d_view(&player);
-        //}
-
-        //SDL_RenderPresent(prenderer);
-
         sdl_help_start_frame();
 
-        sdl_help_draw_vertical_line(100, 100, 200, 200);
+        if (!in_3d) {
+            /* Render map and player in 2d */
+            // draw2d_automap();
+            // draw2d_visible_automap(&player);
+            // draw2d_player(&player);
+        } else {
+            /* Render map in 3d from player view */
+            draw3d_view(&player);
+        }
 
         sdl_help_finish_frame();
 
