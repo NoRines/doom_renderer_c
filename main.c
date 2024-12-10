@@ -11,13 +11,15 @@
 #include <stdlib.h>
 #include <assert.h>
 
-// #define WIDTH 320
-// #define HEIGHT 240
-// #define WINDOW_SCALE 3
+#define WIDTH 320
+#define HEIGHT 240
+#define WINDOW_SCALE 3
 
-#define WIDTH 800
-#define HEIGHT 600
-#define WINDOW_SCALE 1
+
+
+// #define WIDTH 800
+// #define HEIGHT 600
+// #define WINDOW_SCALE 1
 
 void run() {
     player_t player;
